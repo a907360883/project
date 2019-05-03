@@ -1,0 +1,75 @@
+import numpy
+import pandas as pd
+import chardet
+import matplotlib.pyplot as plt
+import scipy.stats
+
+csv = pd.read_csv('D:\\winemag-data_first150k.csv',encoding='utf-8')
+csv['country'].value_counts()
+csv['designation'].value_counts()
+csv['province'].value_counts()
+csv['region_1'].value_counts()
+csv['region_2'].value_counts()
+csv['variety'].value_counts()
+csv['winery'].value_counts()
+
+#points最大值，最小值，中位数，平均值
+values = csv.points.value_counts()
+min(csv.points),max(csv.points),csv.points.median(),csv.points.mean()
+
+#points统计四分位数及缺失值
+sorted_csv=csv.sort_values(by='points',ascending=False)
+sorted_values = sorted_csv['points']
+sorted_values.head((int)(sorted_values.size/2)).median(),sorted_values.tail((int)(sorted_values.size/2)).median()
+sorted_csv.count()
+lost_num = csv.shape[0]-sorted_csv.count().points
+lost_num
+
+#price最大值，最小值，中位数，平均值
+min(csv.price),max(csv.price),csv.price.median(),csv.price.mean()
+
+#price统计四分位数及缺失值
+sorted_csv=csv.sort_values(by='price',ascending=False)
+sorted_values = sorted_csv['price']
+sorted_values.head((int)(sorted_values.size/2)).median(),sorted_values.tail((int)(sorted_values.size/2)).median()
+sorted_csv.count()
+lost_num = csv.shape[0]-sorted_csv.count().price
+lost_num
+ 
+#points qq图
+fig = plt.figure()
+res = scipy.stats.probplot(csv['points'],plot=plt)
+plt.show()
+
+#points直方图
+csv['points'].hist().get_figure().show()
+
+#points盒图
+boxplot=sorted_csv.boxplot(column='points')
+boxplot
+
+csv_delete = csv
+csv_delete = csv_delete.dropna(axis=0,subset=['price'])
+fig = plt.figure()
+res = scipy.stats.probplot(csv_delete['price'],plot=plt)
+plt.show()
+csv_delete['price'].hist().get_figure().show()
+boxplot=csv_delete.boxplot(column='price')
+boxplot
+
+csv_fill = csv
+csv_fill['price'] = csv_fill['price'].fillna(csv.price.mode()[0])
+csv_fill.price.value_counts()
+
+fig = plt.figure()
+res = scipy.stats.probplot(csv_fill['price'],plot=plt)
+plt.show()
+csv_fill = csv_fill[csv_fill.price<300]
+csv_fill['price'].hist().get_figure().show()
+boxplot=csv_fill.boxplot(column='price')
+boxplot
+
+csv_similiar = csv = pd.read_csv('D:\\winemag-data_first150k.csv',encoding='utf-8')
+for i in range(0,len(csv_similiar)):
+    if (pd.isnull(csv_similiar.iloc[i]['price'])):
+        csv_similiar.price[i] = csv_similiar.points[i]

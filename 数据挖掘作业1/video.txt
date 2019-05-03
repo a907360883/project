@@ -1,0 +1,78 @@
+import re
+import os 
+import pandas as pd
+import numpy as np
+import chardet
+import matplotlib.pyplot as plt
+import scipy.stats
+
+path = 'D:/csvs/'
+files = os.listdir(path)
+files_csv = list(files)
+data_list = []
+for file in files_csv:
+    tmp = pd.read_csv(path + file,encoding='ISO8859-1')
+    data_list.append(tmp)
+all_csv = pd.concat(data_list)
+all_csv.head()
+
+all_csv.thumbnail_link.value_counts()
+all_csv.comments_disabled.value_counts()
+all_csv.ratings_disabled.value_counts()
+all_csv.video_error_or_removed.value_counts()
+
+values = all_csv.views.value_counts()
+min(all_csv.views),max(all_csv.views),all_csv.views.median(),all_csv.views.mean()
+sorted_csv=all_csv.sort_values(by='views',ascending=False)
+sorted_values = sorted_csv['views']
+sorted_values.head((int)(sorted_values.size/2)).median(),sorted_values.tail((int)(sorted_values.size/2)).median()
+
+values = all_csv.likes.value_counts()
+min(all_csv.likes),max(all_csv.likes),all_csv.likes.median(),all_csv.likes.mean()
+sorted_csv=all_csv.sort_values(by='likes',ascending=False)
+sorted_values = sorted_csv['likes']
+sorted_values.head((int)(sorted_values.size/2)).median(),sorted_values.tail((int)(sorted_values.size/2)).median()
+
+values = all_csv.dislikes.value_counts()
+min(all_csv.dislikes),max(all_csv.dislikes),all_csv.dislikes.median(),all_csv.dislikes.mean()
+sorted_csv=all_csv.sort_values(by='dislikes',ascending=False)
+sorted_values = sorted_csv['dislikes']
+sorted_values.head((int)(sorted_values.size/2)).median(),sorted_values.tail((int)(sorted_values.size/2)).median()
+
+values = all_csv.comment_count.value_counts()
+min(all_csv.comment_count),max(all_csv.comment_count),all_csv.comment_count.median(),all_csv.comment_count.mean()
+sorted_csv=all_csv.sort_values(by='comment_count',ascending=False)
+sorted_values = sorted_csv['comment_count']
+sorted_values.head((int)(sorted_values.size/2)).median(),sorted_values.tail((int)(sorted_values.size/2)).median()
+
+fig = plt.figure()
+res = scipy.stats.probplot(sll_csv['views'],plot=plt)
+plt.show()
+all_csv = sll_csv[all_csv.views<300]
+all_csv['views'].hist().get_figure().show()
+boxplot=all_csv.boxplot(column='views')
+boxplot
+
+fig = plt.figure()
+res = scipy.stats.probplot(all_csv['likes'],plot=plt)
+plt.show()
+all_csv = sll_csv[all_csv.likes<70000]
+all_csv['likes'].hist().get_figure().show()
+boxplot=all_csv.boxplot(column='likes')
+boxplot
+
+fig = plt.figure()
+res = scipy.stats.probplot(all_csv['dislikes'],plot=plt)
+plt.show()
+all_csv = sll_csv[all_csv.dislikes<70000]
+all_csv['dislikes'].hist().get_figure().show()
+boxplot=all_csv.boxplot(column='dislikes')
+boxplot
+
+fig = plt.figure()
+res = scipy.stats.probplot(all_csv['comment_count'],plot=plt)
+plt.show()
+all_csv = sll_csv[all_csv.comment_count<70000]
+all_csv['comment_count'].hist().get_figure().show()
+boxplot=all_csv.boxplot(column='comment_count')
+boxplot
